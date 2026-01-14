@@ -1,10 +1,10 @@
 services:
-  # PHP 7.3
-  php73:
+  # PHP 7.4
+  php74:
     build:
       context: .
-      dockerfile: php73.Dockerfile
-    container_name: php73_dev
+      dockerfile: php74.Dockerfile
+    container_name: php74_dev
     ports:
       - "8073:8080"
     environment:
