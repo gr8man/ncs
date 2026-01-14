@@ -35,8 +35,7 @@ Gotowe środowisko Dockerowe do pracy nad aplikacjami PHP na wersjach 7.4 oraz 8
 ## **⚙️ Konfiguracja PHP & Docker**
 
 * **NGINX\_WEBROOT:** /var/www/html/ (Twoje pliki index.php powinny być w /www).  
-* **PHP\_MEMORY\_LIMIT:** 256M (limit dla silnika PHP).  
-* **Docker RAM Limit:** 512MB (limit sprzętowy na kontener PHP).
+* **PHP_MEMORY_LIMIT:** 512MB (limit dla PHP).
 
 ## **🐞 Konfiguracja VS Code (Xdebug 3\)**
 
@@ -73,4 +72,4 @@ Gotowe środowisko Dockerowe do pracy nad aplikacjami PHP na wersjach 7.4 oraz 8
 
 1. **Aktualizacja i budowa:** manage \-\> update  
 2. **Uruchomienie:** manage \-\> start  
-3. **Logi na żywo:** Uruchom logs\_live.bat (pozostanie otwarte).
+3. **Logi na żywo:** Uruchom LOGI_LIVE.bat (pozostanie otwarte).
