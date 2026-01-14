@@ -1,51 +1,54 @@
 services:
-  # PHP 7.3 na porcie 8073
+  # PHP 7.3
   php73:
     build:
       context: .
       dockerfile: php73.Dockerfile
+    container_name: php73_dev
     ports:
       - "8073:8080"
-    volumes:
-      - ./www73:/var/www/html
     environment:
-      - PUID=1000
-      - PGID=1000
+      - XDEBUG_MODE=develop,debug
+      - XDEBUG_CONFIG=client_host=host.docker.internal start_with_request=yes
+    volumes:
+      - C:/repo:/var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
-  # PHP 8.3 na porcie 8083
+  # PHP 8.3
   php83:
     build:
       context: .
       dockerfile: php83.Dockerfile
+    container_name: php83_dev
     ports:
       - "8083:8080"
-    volumes:
-      - ./www83:/var/www/html
     environment:
-      - PUID=1000
-      - PGID=1000
+      - XDEBUG_MODE=develop,debug
+      - XDEBUG_CONFIG=client_host=host.docker.internal start_with_request=yes
+    volumes:
+      - C:/repo:/var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
-  # Baza danych MySQL
+  # MySQL z zapisem do folderu C:/mysql
   mysql:
     image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+    container_name: mysql_dev
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: dev_db
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - C:/mysql:/var/lib/mysql  # Mapowanie folderu lokalnego
 
   # PHPMyAdmin
-  phpmyadmin:
+  pma:
     image: phpmyadmin:latest
+    container_name: pma_dev
     ports:
       - "8081:80"
     environment:
       PMA_HOST: mysql
-      UPLOAD_LIMIT: 64M
-
-volumes:
-  mysql_data:
