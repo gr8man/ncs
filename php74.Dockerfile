@@ -1,5 +1,4 @@
-FROM serversideup/php:7.3-fpm-nginx
-# Dla drugiego pliku: FROM serversideup/php:8.3-fpm-nginx
+FROM serversideup/php:7.4-fpm-nginx
 
 USER root
 
