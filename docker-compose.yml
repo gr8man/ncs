@@ -57,3 +57,9 @@ services:
       - "8081:80"
     environment:
       PMA_HOST: mysql
+  # redis
+  redis:
+  image: redis:7
+  container_name: redis_dev
+  ports:
+    - "6379:6379"
