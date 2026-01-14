@@ -1,5 +1,9 @@
+version: "3.9"
+
 services:
+  # =========================
   # PHP 7.4
+  # =========================
   php74:
     build:
       context: .
@@ -8,16 +12,21 @@ services:
     ports:
       - "8074:8080"
     environment:
-      - NGINX_WEBROOT=/var/www/html/
-      - PHP_MEMORY_LIMIT=512M
-      - XDEBUG_MODE=develop,debug
-      - XDEBUG_CONFIG=client_host=host.docker.internal start_with_request=yes
+      NGINX_WEBROOT: /var/www/html
+      PHP_MEMORY_LIMIT: 512M
+      XDEBUG_MODE: develop,debug
+      XDEBUG_CONFIG: client_host=host.docker.internal start_with_request=yes
     volumes:
-      - ./www:/var/www/html  # Ścieżka relatywna do folderu z kodem
+      - ./www:/var/www/html:cached
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      - mysql
+      - redis
 
+  # =========================
   # PHP 8.3
+  # =========================
   php83:
     build:
       context: .
@@ -26,30 +35,37 @@ services:
     ports:
       - "8083:8080"
     environment:
-      - NGINX_WEBROOT=/var/www/html/
-      - PHP_MEMORY_LIMIT=512M
-      - XDEBUG_MODE=develop,debug
-      - XDEBUG_CONFIG=client_host=host.docker.internal start_with_request=yes
+      NGINX_WEBROOT: /var/www/html
+      PHP_MEMORY_LIMIT: 512M
+      XDEBUG_MODE: develop,debug
+      XDEBUG_CONFIG: client_host=host.docker.internal start_with_request=yes
     volumes:
-      - ./www:/var/www/html  # Ten sam folder kodu co wyżej
+      - ./www:/var/www/html:cached
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      - mysql
+      - redis
 
+  # =========================
   # MySQL
+  # =========================
   mysql:
     image: mysql:8.0
     container_name: mysql_dev
-    restart: always
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: dev_db
       MYSQL_ROOT_HOST: "%"
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
-      - ./mysql_data:/var/lib/mysql # Baza danych w podfolderze projektu
+      - ./mysql_data:/var/lib/mysql
 
-  # PHPMyAdmin
+  # =========================
+  # phpMyAdmin
+  # =========================
   pma:
     image: phpmyadmin:latest
     container_name: pma_dev
@@ -57,9 +73,17 @@ services:
       - "8081:80"
     environment:
       PMA_HOST: mysql
-  # redis
+      PMA_PORT: 3306
+    depends_on:
+      - mysql
+
+  # =========================
+  # Redis
+  # =========================
   redis:
-  image: redis:7
-  container_name: redis_dev
-  ports:
-    - "6379:6379"
+    image: redis:7
+    container_name: redis_dev
+    ports:
+      - "6379:6379"
+
+
