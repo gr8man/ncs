@@ -65,6 +65,12 @@ Xdebug jest skonfigurowany na porcie `9003`.
 
 ### Nginx Root
 Domyślny `WEBROOT` ustawiony jest na `/var/www/html/`. Jeśli Twój projekt startuje z podfolderu (np. `/public`), zmień zmienną `WEBROOT` w pliku `docker-compose.yml`.
+### LOGI
+Można podglądać logi z serwerów www (jednocześnie dla 7.4 i 8.4) uruchom LOGI_LIVE.bat lub :
+:: -f oznacza 'follow' (sledz na zywo)
+:: --tail=10 pokazuje tylko kilka ostatnich linii na start
+docker compose logs -f --tail=10 php74 php83
+
 
 ---
 *Ostatnia aktualizacja dokumentacji: 14.01.2026*
