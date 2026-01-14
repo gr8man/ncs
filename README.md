@@ -58,10 +58,34 @@ Używaj skryptu `manage` dla operacji:
 ### Błąd bazy danych przy pierwszym starcie
 Jeśli kontener `mysql_dev` wyświetla błąd w logach dotyczący zainicjowanego folderu, upewnij się, że katalog `/mysql_data` w Twoim projekcie jest **całkowicie pusty**. MySQL 8.0 wymaga czystego folderu przy pierwszej instalacji.
 
-### Xdebug
-Xdebug jest skonfigurowany na porcie `9003`. 
-- **Client Host:** `host.docker.internal`
-- **Mode:** `develop,debug`
+## 🐞 Debugowanie (Xdebug 3)
+
+Kontenery nasłuchują na porcie **9003**.
+
+### 🐘 PHPStorm
+1. Dodaj serwer w `Settings > PHP > Servers`:
+   - Host: `localhost`, Port: `8073` (lub 8083).
+   - Zaznacz **Use path mappings**.
+   - Mapuj lokalny folder `/www` na zdalny `/var/www/html`.
+2. Włącz "słuchawkę" (**Start Listening for PHP Debug Connections**).
+
+### 📝 VS Code
+Dodaj konfigurację do `.vscode/launch.json`:
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Listen for Xdebug",
+            "type": "php",
+            "request": "launch",
+            "port": 9003,
+            "pathMappings": {
+                "/var/www/html": "${workspaceRoot}/www"
+            }
+        }
+    ]
+}
 
 ### Nginx Root
 Domyślny `WEBROOT` ustawiony jest na `/var/www/html/`. Jeśli Twój projekt startuje z podfolderu (np. `/public`), zmień zmienną `WEBROOT` w pliku `docker-compose.yml`.
