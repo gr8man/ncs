@@ -86,6 +86,7 @@ Dodaj konfigurację do `.vscode/launch.json`:
         }
     ]
 }
+```
 
 ### Nginx Root
 Domyślny `WEBROOT` ustawiony jest na `/var/www/html/`. Jeśli Twój projekt startuje z podfolderu (np. `/public`), zmień zmienną `WEBROOT` w pliku `docker-compose.yml`.
