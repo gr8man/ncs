@@ -1,101 +1,76 @@
-# 🚀 NCS - Multi-Version PHP Dev Environment
+# **🚀 NCS \- Multi-Version PHP Dev Environment**
 
-Repozytorium zawiera gotowe, zoptymalizowane środowisko deweloperskie oparte na Dockerze, umożliwiające jednoczesną pracę na dwóch wersjach PHP.
+Gotowe środowisko Dockerowe do pracy nad aplikacjami PHP na wersjach 7.3 oraz 8.3 z bazą MySQL 8.0 i Redis 7\.
 
-## 📂 Struktura Projektu
+## **📂 Struktura Projektu**
 
 | Folder / Plik | Opis |
-| :--- | :--- |
-| `/www` | **Miejsce na Twój kod źródłowy PHP** (wspólny dla obu wersji). |
-| `/mysql_data` | Przechowuje pliki bazy danych (nie edytuj ręcznie). |
-| `php74.Dockerfile` | Konfiguracja PHP 7.4 + Nginx + ionCube + Xdebug. |
-| `php83.Dockerfile` | Konfiguracja PHP 8.3 + Nginx + ionCube + Xdebug. |
-| `docker-compose.yml` | Definicja usług i połączeń między nimi. |
-| `manage.bat` / `.sh` | Skrypty do szybkiego zarządzania środowiskiem. |
+| :---- | :---- |
+| /www | **Miejsce na kod PHP.** Folder mapowany do /var/www/html/ w kontenerach. |
+| /mysql\_data | Dane bazy danych (trwałe po restarcie). |
+| manage.bat / .sh | Skrypty sterowania: Update, Start, Restart, Stop. |
+| logs\_live.bat / .sh | Skrypty do podglądu logów w czasie rzeczywistym. |
 
----
+## **🌐 Dostępne Usługi**
 
-## 🌐 Dostępne Usługi
+| Usługa | Adres URL / Host | Port |
+| :---- | :---- | :---- |
+| **PHP 7.3** | [http://localhost:8073](https://www.google.com/search?q=http://localhost:8073) | 8073 |
+| **PHP 8.3** | [http://localhost:8083](https://www.google.com/search?q=http://localhost:8083) | 8083 |
+| **phpMyAdmin** | [http://localhost:8081](https://www.google.com/search?q=http://localhost:8081) | 8081 |
+| **MySQL** | mysql (wewnątrz) / localhost (zewnątrz) | 3306 |
+| **Redis** | redis (wewnątrz) / localhost (zewnątrz) | 6379 |
 
-Po uruchomieniu środowisko dostępne jest pod następującymi adresami:
+**Baza Danych (MySQL):**
 
-* **PHP 7.4 + Nginx:** [http://localhost:8074](http://localhost:8074)
-* **PHP 8.3 + Nginx:** [http://localhost:8083](http://localhost:8083)
-* **phpMyAdmin:** [http://localhost:8081](http://localhost:8081)
-* **MySQL:** `localhost:3306`
+* **User:** root  
+* **Pass:** root  
+* **DB:** dev\_db
 
----
+**Cache (Redis):**
 
-## 🗄️ Połączenie z Bazą Danych (PHP)
+* **Host:** redis  
+* **Port:** 6379
 
-Wewnątrz aplikacji używaj poniższych danych:
+## **⚙️ Konfiguracja PHP & Docker**
 
-- **Host:** `mysql`
-- **Użytkownik:** `root`
-- **Hasło:** `root`
-- **Baza danych:** `dev_db`
-- **Port:** `3306`
+* **NGINX\_WEBROOT:** /var/www/html/ (Twoje pliki index.php powinny być w /www).  
+* **PHP\_MEMORY\_LIMIT:** 256M (limit dla silnika PHP).  
+* **Docker RAM Limit:** 512MB (limit sprzętowy na kontener PHP).
 
----
+## **🐞 Konfiguracja VS Code (Xdebug 3\)**
 
-## 🚀 Instrukcja obsługi
+1. Zainstaluj rozszerzenie **PHP Debug**.  
+2. Stwórz plik .vscode/launch.json w głównym katalogu projektu:
 
-### 1. Pierwsze uruchomienie (lub zmiana w Dockerfile)
-Uruchom skrypt `manage` (lub terminal) i wybierz opcję **update**:
-- Pobierze najnowszy kod z GitHub.
-- Zbuduje obrazy i zainstaluje wszystkie rozszerzenia (intl, bcmath, imagick, exif, opcache, xdebug, ioncube).
-
-### 2. Praca codzienna
-Używaj skryptu `manage` dla operacji:
-- **start**: Uruchamia kontenery w tle.
-- **restart**: Odświeża kontenery (przydatne przy zmianach w PHP).
-- **stop**: Zatrzymuje kontenery, ale zachowuje dane.
-
----
-
-## 🛠 Rozwiązywanie problemów
-
-### Błąd bazy danych przy pierwszym starcie
-Jeśli kontener `mysql_dev` wyświetla błąd w logach dotyczący zainicjowanego folderu, upewnij się, że katalog `/mysql_data` w Twoim projekcie jest **całkowicie pusty**. MySQL 8.0 wymaga czystego folderu przy pierwszej instalacji.
-
-## 🐞 Debugowanie (Xdebug 3)
-
-Kontenery nasłuchują na porcie **9003**.
-
-### 🐘 PHPStorm
-1. Dodaj serwer w `Settings > PHP > Servers`:
-   - Host: `localhost`, Port: `8073` (lub 8083).
-   - Zaznacz **Use path mappings**.
-   - Mapuj lokalny folder `/www` na zdalny `/var/www/html`.
-2. Włącz "słuchawkę" (**Start Listening for PHP Debug Connections**).
-
-### 📝 VS Code
-Dodaj konfigurację do `.vscode/launch.json`:
-```json
-{
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Listen for Xdebug",
-            "type": "php",
-            "request": "launch",
-            "port": 9003,
-            "pathMappings": {
-                "/var/www/html": "${workspaceRoot}/www"
-            }
-        }
-    ]
+{  
+  "version": "0.2.0",  
+  "configurations": \[  
+    {  
+      "name": "Listen for Xdebug",  
+      "type": "php",  
+      "request": "launch",  
+      "port": 9003,  
+      "pathMappings": {  
+        "/var/www/html": "${workspaceRoot}/www"  
+      }  
+    }  
+  \]  
 }
-```
 
-### Nginx Root
-Domyślny `WEBROOT` ustawiony jest na `/var/www/html/`. Jeśli Twój projekt startuje z podfolderu (np. `/public`), zmień zmienną `WEBROOT` w pliku `docker-compose.yml`.
-### LOGI
-Można podglądać logi z serwerów www (jednocześnie dla 7.4 i 8.4) uruchom LOGI_LIVE.bat lub :
-:: -f oznacza 'follow' (sledz na zywo)
-:: --tail=10 pokazuje tylko kilka ostatnich linii na start
-docker compose logs -f --tail=10 php74 php83
+3. Uruchom nasłuchiwanie klawiszem **F5**.
 
+## **🐘 Konfiguracja PHPStorm (XStorm)**
 
----
-*Ostatnia aktualizacja dokumentacji: 14.01.2026*
+1. Dodaj serwer w Settings \> PHP \> Servers:  
+   * **Host:** localhost, **Port:** 8073 (lub 8083).  
+   * Zaznacz **Use path mappings**.  
+   * Mapuj lokalny folder /www na zdalny /var/www/html.  
+2. Sprawdź Settings \> PHP \> Debug, czy port to 9003\.  
+3. Włącz ikonę "słuchawki" w prawym górnym rogu.
+
+## **🚀 Szybkie Starty**
+
+1. **Aktualizacja i budowa:** manage \-\> update  
+2. **Uruchomienie:** manage \-\> start  
+3. **Logi na żywo:** Uruchom logs\_live.bat (pozostanie otwarte).
