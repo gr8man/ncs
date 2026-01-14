@@ -1,6 +1,6 @@
 # **🚀 NCS \- Multi-Version PHP Dev Environment**
 
-Gotowe środowisko Dockerowe do pracy nad aplikacjami PHP na wersjach 7.3 oraz 8.3 z bazą MySQL 8.0 i Redis 7\.
+Gotowe środowisko Dockerowe do pracy nad aplikacjami PHP na wersjach 7.4 oraz 8.3 z bazą MySQL 8.0 i Redis 7\.
 
 ## **📂 Struktura Projektu**
 
@@ -15,9 +15,9 @@ Gotowe środowisko Dockerowe do pracy nad aplikacjami PHP na wersjach 7.3 oraz 8
 
 | Usługa | Adres URL / Host | Port |
 | :---- | :---- | :---- |
-| **PHP 7.3** | [http://localhost:8073](https://www.google.com/search?q=http://localhost:8073) | 8073 |
-| **PHP 8.3** | [http://localhost:8083](https://www.google.com/search?q=http://localhost:8083) | 8083 |
-| **phpMyAdmin** | [http://localhost:8081](https://www.google.com/search?q=http://localhost:8081) | 8081 |
+| **PHP 7.4** | [http://localhost:8074](http://localhost:8074) | 8073 |
+| **PHP 8.3** | [http://localhost:8083](http://localhost:8083) | 8083 |
+| **phpMyAdmin** | [http://localhost:8081](http://localhost:8081) | 8081 |
 | **MySQL** | mysql (wewnątrz) / localhost (zewnątrz) | 3306 |
 | **Redis** | redis (wewnątrz) / localhost (zewnątrz) | 6379 |
 
