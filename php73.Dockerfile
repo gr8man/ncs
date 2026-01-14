@@ -1,10 +1,12 @@
 FROM serversideup/php:7.3-fpm-nginx
+# Dla drugiego pliku: FROM serversideup/php:8.3-fpm-nginx
 
 USER root
 
-# Instalacja zależności systemowych i rozszerzeń PHP
+# Instalacja zależności i rozszerzeń (w tym xdebug)
 RUN apt-get update && apt-get install -y --no-install-recommends qpdf \
-    && install-php-extensions intl bcmath imagick exif opcache
+    && install-php-extensions intl bcmath imagick exif opcache xdebug \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Instalacja ionCube Loader
 RUN curl -fSL "https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz" -o ioncube.tar.gz \
