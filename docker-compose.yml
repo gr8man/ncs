@@ -1,17 +1,17 @@
 services:
-  # PHP 7.4
-  php74:
+  # PHP 7.3
+  php73:
     build:
       context: .
-      dockerfile: php74.Dockerfile
-    container_name: php74_dev
+      dockerfile: php73.Dockerfile
+    container_name: php73_dev
     ports:
       - "8073:8080"
     environment:
       - XDEBUG_MODE=develop,debug
       - XDEBUG_CONFIG=client_host=host.docker.internal start_with_request=yes
     volumes:
-      - C:/repo:/var/www/html
+      - ./www:/var/www/html  # Ścieżka relatywna do folderu z kodem
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -27,11 +27,11 @@ services:
       - XDEBUG_MODE=develop,debug
       - XDEBUG_CONFIG=client_host=host.docker.internal start_with_request=yes
     volumes:
-      - C:/repo:/var/www/html
+      - ./www:/var/www/html  # Ten sam folder kodu co wyżej
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
-  # MySQL z zapisem do folderu C:/mysql
+  # MySQL
   mysql:
     image: mysql:8.0
     container_name: mysql_dev
@@ -42,7 +42,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - C:/mysql:/var/lib/mysql  # Mapowanie folderu lokalnego
+      - ./mysql_data:/var/lib/mysql # Baza danych w podfolderze projektu
 
   # PHPMyAdmin
   pma:
