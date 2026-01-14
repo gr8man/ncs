@@ -8,7 +8,7 @@ Repozytorium zawiera gotowe, zoptymalizowane środowisko deweloperskie oparte na
 | :--- | :--- |
 | `/www` | **Miejsce na Twój kod źródłowy PHP** (wspólny dla obu wersji). |
 | `/mysql_data` | Przechowuje pliki bazy danych (nie edytuj ręcznie). |
-| `php73.Dockerfile` | Konfiguracja PHP 7.3 + Nginx + ionCube + Xdebug. |
+| `php74.Dockerfile` | Konfiguracja PHP 7.4 + Nginx + ionCube + Xdebug. |
 | `php83.Dockerfile` | Konfiguracja PHP 8.3 + Nginx + ionCube + Xdebug. |
 | `docker-compose.yml` | Definicja usług i połączeń między nimi. |
 | `manage.bat` / `.sh` | Skrypty do szybkiego zarządzania środowiskiem. |
@@ -19,7 +19,7 @@ Repozytorium zawiera gotowe, zoptymalizowane środowisko deweloperskie oparte na
 
 Po uruchomieniu środowisko dostępne jest pod następującymi adresami:
 
-* **PHP 7.3 + Nginx:** [http://localhost:8073](http://localhost:8073)
+* **PHP 7.4 + Nginx:** [http://localhost:8074](http://localhost:8074)
 * **PHP 8.3 + Nginx:** [http://localhost:8083](http://localhost:8083)
 * **phpMyAdmin:** [http://localhost:8081](http://localhost:8081)
 * **MySQL:** `localhost:3306`
