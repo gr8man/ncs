@@ -1,5 +1,5 @@
 services:
-  # PHP 7.3
+  # PHP 7.4
   php74:
     build:
       context: .
