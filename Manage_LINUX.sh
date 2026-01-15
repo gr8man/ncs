@@ -5,7 +5,7 @@ read choice
 case $choice in
     1|update)
         git pull origin main
-        docker compose build
+        docker compose down --rmi all && docker compose build --no-cache && docker compose up -d
         ;;
     2|start)
         docker compose up -d
