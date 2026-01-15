@@ -38,9 +38,13 @@ docker rm tmp_copy_83
 
 echo [SUCCESS] Pliki konfiguracyjne zostaly skopiowane na hosta.
 
+
 :START_CONTAINERS
 echo [INFO] Uruchamianie srodowiska Docker...
 docker compose up -d --build
+
+echo [INFO] Otwieranie portu 3307 w firewallu...
+netsh advfirewall firewall add rule name="Docker MySQL 3307" dir=in action=allow protocol=TCP localport=3307
 
 echo [SUCCESS] Gotowe! Twoje srodowisko dziala.
 pause
