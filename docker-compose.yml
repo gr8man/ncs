@@ -16,6 +16,7 @@ services:
       XDEBUG_CONFIG: client_host=host.docker.internal start_with_request=yes
     volumes:
       - ./www:/var/www/html:cached
+      - ./nginx/php74.conf:/etc/nginx/sites-enabled/default.conf
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
@@ -39,6 +40,7 @@ services:
       XDEBUG_CONFIG: client_host=host.docker.internal start_with_request=yes
     volumes:
       - ./www:/var/www/html:cached
+      - ./nginx/php74.conf:/etc/nginx/sites-enabled/default.conf
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
