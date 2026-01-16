@@ -1,0 +1,1 @@
+docker compose logs -f --tail=10 php74 php83
