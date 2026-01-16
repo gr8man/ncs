@@ -76,8 +76,8 @@ services:
     ports:
       - "8081:80"
     environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
+      PMA_HOST: ${DB_HOST}
+      PMA_PORT: ${DB_PORT}
     
   # =========================
   # Redis
