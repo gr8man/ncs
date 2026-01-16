@@ -6,6 +6,9 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 # Instalujemy wszystko jedną komendą
 RUN install-php-extensions redis intl bcmath imagick exif opcache xdebug
 
+# Aktywacja mod_rewrite
+RUN a2enmod rewrite
+
 # Zwiększenie limitów PHP
 RUN echo "max_input_vars = 10000" >> /usr/local/etc/php/conf.d/docker-php-custom.ini \
     && echo "memory_limit = 512M" >> /usr/local/etc/php/conf.d/docker-php-custom.ini \
