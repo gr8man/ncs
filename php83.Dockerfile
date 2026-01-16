@@ -4,7 +4,7 @@ FROM php:8.3-apache
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
 # Instalujemy wszystko jedną komendą
-RUN install-php-extensions redis intl bcmath imagick exif opcache xdebug
+RUN install-php-extensions redis intl bcmath imagick exif opcache xdebug mysqli pdo_mysql zip
 
 # Aktywacja mod_rewrite
 RUN a2enmod rewrite
@@ -21,18 +21,32 @@ RUN echo "max_input_vars = 10000" >> /usr/local/etc/php/conf.d/docker-php-custom
 RUN echo "suhosin.post.max_vars = 10000" >> /usr/local/etc/php/conf.d/docker-php-custom.ini \
     && echo "suhosin.request.max_vars = 10000" >> /usr/local/etc/php/conf.d/docker-php-custom.ini
 
-RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
-    && echo "opcache.enable_cli=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
-    && echo "opcache.memory_consumption=256" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
-
+RUN { \
+    echo 'zend_extension=opcache'; \
+    echo 'opcache.enable=1'; \
+    echo 'opcache.enable_cli=1'; \
+    echo 'opcache.memory_consumption=256'; \
+    echo 'opcache.interned_strings_buffer=16'; \
+    echo 'opcache.max_accelerated_files=20000'; \
+    #echo 'opcache.validate_timestamps=0'; \
+    #echo 'opcache.revalidate_freq=0'; \
+    # --- KONFIGURACJA JIT (PHP 8+) ---
+    # 1255 to najbardziej agresywny i wydajny tryb
+    echo 'opcache.jit_buffer_size=128M'; \
+    echo 'opcache.jit=1255'; \
+} > /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 # XDEBUG
 # Konfiguracja Xdebug 3 dla PHP 8.3
 # XDEBUG
 # W Dockerfile użyj tych zmiennych bezpośrednio w pliku ini:
-RUN echo "xdebug.mode=\${XDEBUG_MODE}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN { \
+    echo 'xdebug.mode=${XDEBUG_MODE}'; \
+    echo 'xdebug.start_with_request=trigger'; \
+    echo 'xdebug.client_host=host.docker.internal'; \
+    echo 'xdebug.client_port=9003'; \
+    echo 'xdebug.idekey=VSCODE'; \
+    echo 'xdebug.discover_client_host=0'; \
+} > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 ################ APACHE ########################
 

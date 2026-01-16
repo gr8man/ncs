@@ -19,7 +19,7 @@ services:
       - DB_PORT=${DB_PORT}
       - XDEBUG_MODE=${XDEBUG_MODE}
     volumes:
-      - ${APP_PATH:-./www}:/var/www/html:cached
+      - ${APP_PATH:-./www}:/var/www/html
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -52,19 +52,21 @@ services:
   # MySQL
   # =========================
   mysql:
-    image: mysql:8.0
+    image: mariadb:10.11
     container_name: mysql_dev
     restart: unless-stopped
-    # problem z bazą danych
     command: --sql-mode="1"
+    # MariaDB używa innych nazw zmiennych środowiskowych, 
+    # ale zachowuje kompatybilność z MYSQL_*
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: dev_db
-      MYSQL_ROOT_HOST: "%"
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data_dev:/var/lib/mysql
+      - mariadb_data_dev:/var/lib/mysql
+
+
 
   # =========================
   # phpMyAdmin
@@ -89,5 +91,4 @@ services:
     ports:
       - "6379:6379"
 volumes:
-  mysql_data_dev:
-
+  mariadb_data_dev:
