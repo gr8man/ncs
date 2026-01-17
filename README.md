@@ -36,7 +36,7 @@ Dodaj do pliku `.env` wpis `PROJECT_PATH`, na przykład:
 
 **4. Użycie**
 
-Projekt zawiera skrypty `.bat` przeznaczone dla systemu Windows. Ponieważ pracujesz w środowisku Linux, poniżej znajdują się odpowiadające im komendy `docker-compose`.
+Projekt zawiera skrypty `.bat` przeznaczone dla systemu Windows. Jeżeli pracujesz w środowisku Linux, poniżej znajdują się odpowiadające im komendy `docker-compose`.
 
 *   **Inicjalizacja / Przygotowanie struktury (`system-init.bat`)**
     Służy do przygotowania początkowej struktury środowiska oraz zbudowania obrazów Docker na podstawie plików `php74.Dockerfile` i `php83.Dockerfile`. Należy wykonać tę komendę przy pierwszej konfiguracji.
