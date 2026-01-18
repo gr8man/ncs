@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.3-fpm
 
 # Kopiujemy gotowy skrypt instalatora z oficjalnego obrazu (najszybsza metoda)
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
@@ -7,7 +7,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 RUN install-php-extensions redis intl bcmath imagick exif opcache xdebug mysqli pdo_mysql zip
 
 # Aktywacja mod_rewrite
-RUN a2enmod rewrite
+# RUN a2enmod rewrite
 
 # Zwiększenie limitów PHP
 RUN echo "max_input_vars = 10000" >> /usr/local/etc/php/conf.d/docker-php-custom.ini \
@@ -27,39 +27,48 @@ RUN { \
     echo 'opcache.enable_cli=1'; \
     echo 'opcache.memory_consumption=256'; \
     echo 'opcache.interned_strings_buffer=16'; \
-    echo 'opcache.max_accelerated_files=20000'; \
+    #echo 'opcache.max_accelerated_files=20000'; \
     #echo 'opcache.validate_timestamps=0'; \
     #echo 'opcache.revalidate_freq=0'; \
     # --- KONFIGURACJA JIT (PHP 8+) ---
     # 1255 to najbardziej agresywny i wydajny tryb
-    echo 'opcache.jit_buffer_size=128M'; \
-    echo 'opcache.jit=1255'; \
+    #echo 'opcache.jit_buffer_size=128M'; \
+    #echo 'opcache.jit=1255'; \
 } > /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 # XDEBUG
 # Konfiguracja Xdebug 3 dla PHP 8.3
 # XDEBUG
 # W Dockerfile użyj tych zmiennych bezpośrednio w pliku ini:
-RUN { \
-    echo 'xdebug.mode=${XDEBUG_MODE}'; \
-    echo 'xdebug.start_with_request=trigger'; \
-    echo 'xdebug.client_host=host.docker.internal'; \
-    echo 'xdebug.client_port=9003'; \
-    echo 'xdebug.idekey=VSCODE'; \
-    echo 'xdebug.discover_client_host=0'; \
-} > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+ARG XDEBUG_MODE=off
+ENV XDEBUG_MODE=${XDEBUG_MODE}
+
+RUN if [ "$XDEBUG_MODE" = "debug" ]; then \
+        { \
+            echo 'zend_extension=xdebug'; \
+            echo 'xdebug.mode=debug'; \
+            echo 'xdebug.start_with_request=yes'; \
+            # echo 'xdebug.discover_client_host=0'; \
+            echo 'xdebug.client_host=host.docker.internal'; \
+            echo 'xdebug.client_port=9003'; \
+            echo 'xdebug.idekey=VSCODE'; \
+            echo 'xdebug.log_level=0'; \
+        } > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    else \
+        echo "" > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    fi
 
 ################ APACHE ########################
 
 # Włączenie modułu i obsługa wszystkich sieci prywatnych jako zaufanych proxy
 # 1. Włącz moduł remoteip
-RUN a2enmod remoteip
+# RUN a2enmod remoteip
 
 # 2. Utwórz konfigurację w poprawnym katalogu (/etc/apache2/conf-available/)
-RUN echo "RemoteIPHeader X-Forwarded-For" > /etc/apache2/conf-available/remoteip.conf && \
-    echo "RemoteIPInternalProxy 10.0.0.0/8" >> /etc/apache2/conf-available/remoteip.conf && \
-    echo "RemoteIPInternalProxy 172.16.0.0/12" >> /etc/apache2/conf-available/remoteip.conf && \
-    echo "RemoteIPInternalProxy 192.168.0.0/16" >> /etc/apache2/conf-available/remoteip.conf && \
-    a2enconf remoteip
+# RUN echo "RemoteIPHeader X-Forwarded-For" > /etc/apache2/conf-available/remoteip.conf && \
+#     echo "RemoteIPInternalProxy 10.0.0.0/8" >> /etc/apache2/conf-available/remoteip.conf && \
+#     echo "RemoteIPInternalProxy 172.16.0.0/12" >> /etc/apache2/conf-available/remoteip.conf && \
+#     echo "RemoteIPInternalProxy 192.168.0.0/16" >> /etc/apache2/conf-available/remoteip.conf && \
+#     a2enconf remoteip
 
     
 
